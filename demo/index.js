@@ -1,6 +1,4 @@
-# 是否全选了，全选，不选，反选
-```
-const SelectAll = require('zhf.select-all');
+const SelectAll = require('../dist/index.min');
 new SelectAll({
     items: '.input-checkbox', // 所有的被选项
     callback: {
@@ -9,4 +7,3 @@ new SelectAll({
         },
     },
 });
-```
