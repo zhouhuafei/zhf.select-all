@@ -1,6 +1,6 @@
 {
     "name": "zhf.select-all",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "description": "no description",
     "main": "dist/index.min.js",
     "scripts": {
@@ -37,6 +37,7 @@
         "jest": "^22.1.1"
     },
     "dependencies": {
+        "zhf.event-delegate": "^1.0.4",
         "zhf.extend": "^2.0.2",
         "zhf.get-dom-array": "^1.0.1"
     }
