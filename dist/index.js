@@ -11,12 +11,12 @@ function SelectAll(json) {
             click: function click() {}
         }
     }, json);
-    this.itemsDom = getDomArray(this.opts.items); // 获取原生的dom节点并转换成数组
     this.init();
 }
 
 // 初始化
 SelectAll.prototype.init = function () {
+    this.itemsDom = getDomArray(this.opts.items); // 获取原生的dom节点并转换成数组
     this.power();
 };
 
@@ -45,7 +45,11 @@ SelectAll.prototype.selectReverse = function () {
 SelectAll.prototype.power = function () {
     var self = this;
     this.itemsDom.forEach(function (v1) {
+        if (v1.isBindSelectAllClick) {
+            return;
+        }
         v1.addEventListener('click', function () {
+            v1.isBindSelectAllClick = true;
             var isCheckedAll = true; // 是否全部的选项都被选中了(假设全部选中)
             self.itemsDom.forEach(function (v2) {
                 if (v2.checked === false) {
