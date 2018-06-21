@@ -10,4 +10,8 @@ const selectAll = new SelectAll({
     },
 });
 
-window.selectAll = selectAll; // 后续新增元素或者删除元素只需要调用一下selectAll.init()即可。
+window.selectAll = selectAll;
+
+// 后续新增元素导致事件丢失，删除元素导致判断是否全部选中出现误差。
+// 解决方案1、新增或者删除元素之后，调用一下selectAll.init()。
+// 解决方案2、开启事件委托，参数isOpenEventDelegate设置为true。
