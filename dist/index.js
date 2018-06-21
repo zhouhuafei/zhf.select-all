@@ -68,7 +68,6 @@ SelectAll.prototype.isSelectAll = function () {
 // 当某一项被选中时,是否全部选项都被选中了
 SelectAll.prototype.power = function () {
     var self = this;
-
     if (self.opts.isOpenEventDelegate) {
         eventDelegate.on(document, 'click', self.opts.items, function () {
             self.opts.callback.click({ element: this, isCheckedAll: self.isSelectAll() });
