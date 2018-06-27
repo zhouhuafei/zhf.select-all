@@ -76,11 +76,11 @@ SelectAll.prototype.isSelectAll = function () {
         self.itemsDom = getDomArray(opts.items); // 获取原生的dom节点并转换成数组
     }
     var isCheckedAll = true; // 是否全部的选项都被选中了(假设全部选中)
-    self.itemsDom.forEach(function (v2) {
-        if (opts.isFilterDisabled && v2.disabled) {
+    self.itemsDom.forEach(function (v) {
+        if (opts.isFilterDisabled && v.disabled) {
             return;
         }
-        if (v2.checked === false) {
+        if (v.checked === false) {
             isCheckedAll = false;
         }
     });
@@ -96,12 +96,12 @@ SelectAll.prototype.power = function () {
             opts.callback.click({ element: this, isCheckedAll: self.isSelectAll() });
         });
     } else {
-        self.itemsDom.forEach(function (v1) {
-            if (v1.isBindSelectAllClick) {
+        self.itemsDom.forEach(function (v) {
+            if (v.isBindSelectAllClick) {
                 return;
             }
-            v1.addEventListener('click', function () {
-                v1.isBindSelectAllClick = true;
+            v.addEventListener('click', function () {
+                v.isBindSelectAllClick = true;
                 opts.callback.click({ element: this, isCheckedAll: self.isSelectAll() });
             });
         });
