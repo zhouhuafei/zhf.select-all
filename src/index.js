@@ -91,18 +91,22 @@ SelectAll.prototype.power = function () {
     const self = this;
     const opts = self.opts;
     if (opts.isOpenEventDelegate) {
+        if (document.isBindSelectAllClick) { // 防止多次绑定事件
+            return;
+        }
         eventDelegate.on(document, 'click', opts.items, function () {
             opts.callback.click({element: this, isCheckedAll: self.isSelectAll()});
         });
+        document.isBindSelectAllClick = true;
     } else {
         self.itemsDom.forEach(function (v) {
-            if (v.isBindSelectAllClick) {
+            if (v.isBindSelectAllClick) { // 防止多次绑定事件
                 return;
             }
             v.addEventListener('click', function () {
-                v.isBindSelectAllClick = true;
                 opts.callback.click({element: this, isCheckedAll: self.isSelectAll()});
             });
+            v.isBindSelectAllClick = true;
         });
     }
 };
