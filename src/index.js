@@ -7,6 +7,7 @@ function SelectAll(json) {
     this.opts = extend({
         items: null, // 所有的被选项
         isOpenEventDelegate: false, // 是否开启事件委托
+        isFilterDisabled: true, // 是否过滤被禁用的
         callback: {
             click: function () {
             },
@@ -17,46 +18,67 @@ function SelectAll(json) {
 
 // 初始化
 SelectAll.prototype.init = function () {
-    this.itemsDom = getDomArray(this.opts.items);// 获取原生的dom节点并转换成数组
+    this.itemsDom = getDomArray(this.opts.items); // 获取原生的dom节点并转换成数组
     this.power();
 };
 
 // 不选
 SelectAll.prototype.selectNothing = function () {
-    if (this.opts.isOpenEventDelegate) {
-        this.itemsDom = getDomArray(this.opts.items);// 获取原生的dom节点并转换成数组
+    const self = this;
+    const opts = self.opts;
+    if (opts.isOpenEventDelegate) {
+        self.itemsDom = getDomArray(opts.items); // 获取原生的dom节点并转换成数组
     }
-    this.itemsDom.forEach(function (v) {
+    self.itemsDom.forEach(function (v) {
+        if (opts.isFilterDisabled && v.disabled) {
+            return;
+        }
         v.checked = false;
     });
 };
 
 // 全选
 SelectAll.prototype.selectAll = function () {
-    if (this.opts.isOpenEventDelegate) {
-        this.itemsDom = getDomArray(this.opts.items);// 获取原生的dom节点并转换成数组
+    const self = this;
+    const opts = self.opts;
+    if (opts.isOpenEventDelegate) {
+        self.itemsDom = getDomArray(opts.items); // 获取原生的dom节点并转换成数组
     }
-    this.itemsDom.forEach(function (v) {
+    self.itemsDom.forEach(function (v) {
+        if (opts.isFilterDisabled && v.disabled) {
+            return;
+        }
         v.checked = true;
     });
 };
 
 // 反选
 SelectAll.prototype.selectReverse = function () {
-    if (this.opts.isOpenEventDelegate) {
-        this.itemsDom = getDomArray(this.opts.items);// 获取原生的dom节点并转换成数组
+    const self = this;
+    const opts = self.opts;
+    if (opts.isOpenEventDelegate) {
+        self.itemsDom = getDomArray(opts.items); // 获取原生的dom节点并转换成数组
     }
-    this.itemsDom.forEach(function (v) {
+    self.itemsDom.forEach(function (v) {
+        if (opts.isFilterDisabled && v.disabled) {
+            return;
+        }
         v.checked = !v.checked;
     });
 };
 
+// 是否全部选中了
 SelectAll.prototype.isSelectAll = function () {
-    if (this.opts.isOpenEventDelegate) {
-        this.itemsDom = getDomArray(this.opts.items);// 获取原生的dom节点并转换成数组
+    const self = this;
+    const opts = self.opts;
+    if (opts.isOpenEventDelegate) {
+        self.itemsDom = getDomArray(opts.items); // 获取原生的dom节点并转换成数组
     }
-    let isCheckedAll = true;// 是否全部的选项都被选中了(假设全部选中)
-    this.itemsDom.forEach(function (v2) {
+    let isCheckedAll = true; // 是否全部的选项都被选中了(假设全部选中)
+    self.itemsDom.forEach(function (v2) {
+        if (opts.isFilterDisabled && v2.disabled) {
+            return;
+        }
         if (v2.checked === false) {
             isCheckedAll = false;
         }
@@ -67,18 +89,19 @@ SelectAll.prototype.isSelectAll = function () {
 // 当某一项被选中时,是否全部选项都被选中了
 SelectAll.prototype.power = function () {
     const self = this;
-    if (self.opts.isOpenEventDelegate) {
-        eventDelegate.on(document, 'click', self.opts.items, function () {
-            self.opts.callback.click({element: this, isCheckedAll: self.isSelectAll()});
+    const opts = self.opts;
+    if (opts.isOpenEventDelegate) {
+        eventDelegate.on(document, 'click', opts.items, function () {
+            opts.callback.click({element: this, isCheckedAll: self.isSelectAll()});
         });
     } else {
-        this.itemsDom.forEach(function (v1) {
+        self.itemsDom.forEach(function (v1) {
             if (v1.isBindSelectAllClick) {
                 return;
             }
             v1.addEventListener('click', function () {
                 v1.isBindSelectAllClick = true;
-                self.opts.callback.click({element: this, isCheckedAll: self.isSelectAll()});
+                opts.callback.click({element: this, isCheckedAll: self.isSelectAll()});
             });
         });
     }
