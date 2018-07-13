@@ -8,6 +8,8 @@ function SelectAll(json) {
         items: null, // 所有的被选项
         isOpenEventDelegate: false, // 是否开启事件委托
         isFilterDisabled: true, // 是否过滤被禁用的
+        isUseCheckboxSelectAll: false, // 是否使用checkbox进行全选和不选操作
+        checkboxSelectAll: null, // 如果使用checkbox进行全选和不选操作，请传入对应的checkbox元素。
         callback: {
             click: function () {
             },
@@ -90,23 +92,44 @@ SelectAll.prototype.isSelectAll = function () {
 SelectAll.prototype.power = function () {
     const self = this;
     const opts = self.opts;
-    if (opts.isOpenEventDelegate) {
-        if (document.isBindSelectAllClick) { // 防止多次绑定事件
-            return;
+    const isUseCheckboxSelectAll = opts.isUseCheckboxSelectAll;
+    const checkboxSelectAllDom = document.querySelector(opts.checkboxSelectAll);
+    const isCheckbox = checkboxSelectAllDom.type === 'checkbox';
+    if (isUseCheckboxSelectAll && isCheckbox) { // 如果使用checkbox进行全选和不选操作
+        if (!checkboxSelectAllDom.isBindSelectAllClick) { // 防止多次绑定事件
+            checkboxSelectAllDom.isBindSelectAllClick = true;
+            checkboxSelectAllDom.addEventListener('click', function () {
+                if (this.checked) {
+                    self.selectAll();
+                } else {
+                    self.selectNothing();
+                }
+            });
         }
-        eventDelegate.on(document, 'click', opts.items, function () {
-            opts.callback.click({element: this, isCheckedAll: self.isSelectAll()});
-        });
-        document.isBindSelectAllClick = true;
+    }
+    if (opts.isOpenEventDelegate) {
+        if (!document.isBindSelectAllClick) { // 防止多次绑定事件
+            document.isBindSelectAllClick = true;
+            eventDelegate.on(document, 'click', opts.items, function () {
+                const isCheckedAll = self.isSelectAll();
+                if (isUseCheckboxSelectAll && isCheckbox) {
+                    checkboxSelectAllDom.checked = isCheckedAll;
+                }
+                opts.callback.click({element: this, isCheckedAll: isCheckedAll});
+            });
+        }
     } else {
         self.itemsDom.forEach(function (v) {
-            if (v.isBindSelectAllClick) { // 防止多次绑定事件
-                return;
+            if (!v.isBindSelectAllClick) { // 防止多次绑定事件
+                v.isBindSelectAllClick = true;
+                v.addEventListener('click', function () {
+                    const isCheckedAll = self.isSelectAll();
+                    if (isUseCheckboxSelectAll && isCheckbox) {
+                        checkboxSelectAllDom.checked = isCheckedAll;
+                    }
+                    opts.callback.click({element: this, isCheckedAll: isCheckedAll});
+                });
             }
-            v.addEventListener('click', function () {
-                opts.callback.click({element: this, isCheckedAll: self.isSelectAll()});
-            });
-            v.isBindSelectAllClick = true;
         });
     }
 };
