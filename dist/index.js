@@ -10,8 +10,8 @@ function SelectAll(json) {
         items: null, // 所有的被选项
         isOpenEventDelegate: false, // 是否开启事件委托
         isFilterDisabled: true, // 是否过滤被禁用的
-        isUseCheckboxSelectAll: false, // 是否使用checkbox进行全选和不选操作
-        checkboxSelectAll: null, // 如果使用checkbox进行全选和不选操作，请传入对应的checkbox元素。
+        isUseCheckboxBtnSelectAll: false, // 是否使用checkbox进行全选和不选操作
+        checkboxBtn: null, // 如果使用checkbox进行全选和不选操作，请传入对应的checkbox元素。
         callback: {
             click: function click() {}
         }
@@ -93,15 +93,15 @@ SelectAll.prototype.isSelectAll = function () {
 SelectAll.prototype.power = function () {
     var self = this;
     var opts = self.opts;
-    var isUseCheckboxSelectAll = opts.isUseCheckboxSelectAll;
-    var checkboxSelectAllDom = document.querySelector(opts.checkboxSelectAll);
-    var isCheckbox = checkboxSelectAllDom.type === 'checkbox';
-    if (isUseCheckboxSelectAll && isCheckbox) {
+    var isUseCheckboxBtnSelectAll = opts.isUseCheckboxBtnSelectAll;
+    var checkboxBtnDom = document.querySelector(opts.checkboxBtn);
+    var isCheckbox = checkboxBtnDom.type === 'checkbox';
+    if (isUseCheckboxBtnSelectAll && isCheckbox) {
         // 如果使用checkbox进行全选和不选操作
-        if (!checkboxSelectAllDom.isBindSelectAllClick) {
+        if (!checkboxBtnDom.isBindSelectAllClick) {
             // 防止多次绑定事件
-            checkboxSelectAllDom.isBindSelectAllClick = true;
-            checkboxSelectAllDom.addEventListener('click', function () {
+            checkboxBtnDom.isBindSelectAllClick = true;
+            checkboxBtnDom.addEventListener('click', function () {
                 if (this.checked) {
                     self.selectAll();
                 } else {
@@ -116,8 +116,8 @@ SelectAll.prototype.power = function () {
             document.isBindSelectAllClick = true;
             eventDelegate.on(document, 'click', opts.items, function () {
                 var isCheckedAll = self.isSelectAll();
-                if (isUseCheckboxSelectAll && isCheckbox) {
-                    checkboxSelectAllDom.checked = isCheckedAll;
+                if (isUseCheckboxBtnSelectAll && isCheckbox) {
+                    checkboxBtnDom.checked = isCheckedAll;
                 }
                 opts.callback.click({ element: this, isCheckedAll: isCheckedAll });
             });
@@ -129,8 +129,8 @@ SelectAll.prototype.power = function () {
                 v.isBindSelectAllClick = true;
                 v.addEventListener('click', function () {
                     var isCheckedAll = self.isSelectAll();
-                    if (isUseCheckboxSelectAll && isCheckbox) {
-                        checkboxSelectAllDom.checked = isCheckedAll;
+                    if (isUseCheckboxBtnSelectAll && isCheckbox) {
+                        checkboxBtnDom.checked = isCheckedAll;
                     }
                     opts.callback.click({ element: this, isCheckedAll: isCheckedAll });
                 });
