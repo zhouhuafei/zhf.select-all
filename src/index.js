@@ -94,7 +94,7 @@ SelectAll.prototype.power = function () {
     const opts = self.opts;
     const isUseCheckboxBtnSelectAll = opts.isUseCheckboxBtnSelectAll;
     const checkboxBtnDom = document.querySelector(opts.checkboxBtn);
-    const isCheckbox = checkboxBtnDom.type === 'checkbox';
+    const isCheckbox = checkboxBtnDom ? checkboxBtnDom.type === 'checkbox' : false;
     if (isUseCheckboxBtnSelectAll && isCheckbox) { // 如果使用checkbox进行全选和不选操作
         if (!checkboxBtnDom.isBindSelectAllClick) { // 防止多次绑定事件
             checkboxBtnDom.isBindSelectAllClick = true;
